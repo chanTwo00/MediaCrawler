@@ -86,10 +86,12 @@ class DOUYINClient(AbstractApiClient):
         headers = headers or self.headers
         return await self.request(method="POST", url=f"{self._host}{uri}", data=data, headers=headers)
 
-    @staticmethod
-    async def pong(browser_context: BrowserContext) -> bool:
+    async def pong(self, browser_context: BrowserContext) -> bool:
+        local_storage = await self.playwright_page.evaluate("() => window.localStorage")
+        if local_storage.get("HasUserLogin", "") == "1":
+            return True
+
         _, cookie_dict = utils.convert_cookies(await browser_context.cookies())
-        # todo send some api to test login status
         return cookie_dict.get("LOGIN_STATUS") == "1"
 
     async def update_cookies(self, browser_context: BrowserContext):
@@ -163,6 +165,23 @@ class DOUYINClient(AbstractApiClient):
         headers["Referer"] = urllib.parse.quote(referer_url, safe=':/')
         return await self.get(uri, params)
 
+    async def get_sub_comments(self, comment_id: str, cursor: int = 0):
+        """
+            获取子评论
+        """
+        uri = "/aweme/v1/web/comment/list/reply/"
+        params = {
+            'comment_id': comment_id,
+            "cursor": cursor,
+            "count": 20,
+            "item_type": 0,
+        }
+        keywords = request_keyword_var.get()
+        referer_url = "https://www.douyin.com/search/" + keywords + '?aid=3a3cec5a-9e27-4040-b6aa-ef548c2c1138&publish_time=0&sort_type=0&source=search_history&type=general'
+        headers = copy.copy(self.headers)
+        headers["Referer"] = urllib.parse.quote(referer_url, safe=':/')
+        return await self.get(uri, params)
+
     async def get_aweme_all_comments(
             self,
             aweme_id: str,
@@ -195,5 +214,61 @@ class DOUYINClient(AbstractApiClient):
             await asyncio.sleep(crawl_interval)
             if not is_fetch_sub_comments:
                 continue
-            # todo fetch sub comments
+            # 获取二级评论
+            for comment in comments:
+                reply_comment_total = comment.get("reply_comment_total")
+
+                if reply_comment_total > 0:
+                    comment_id = comment.get("cid")
+                    sub_comments_has_more = 1
+                    sub_comments_cursor = 0
+
+                    while sub_comments_has_more:
+                        sub_comments_res = await self.get_sub_comments(comment_id, sub_comments_cursor)
+                        sub_comments_has_more = sub_comments_res.get("has_more", 0)
+                        sub_comments_cursor = sub_comments_res.get("cursor", 0)
+                        sub_comments = sub_comments_res.get("comments", [])
+
+                        if not sub_comments:
+                            continue
+                        result.extend(sub_comments)
+                        if callback:  # 如果有回调函数，就执行回调函数
+                            await callback(aweme_id, sub_comments)
+                        await asyncio.sleep(crawl_interval)
+        return result
+
+    async def get_user_info(self, sec_user_id: str):
+        uri = "/aweme/v1/web/user/profile/other/"
+        params = {
+            "sec_user_id": sec_user_id,
+            "publish_video_strategy_type": 2,
+            "personal_center_strategy": 1,
+        }
+        return await self.get(uri, params)
+
+    async def get_user_aweme_posts(self, sec_user_id: str, max_cursor: str = "") -> Dict:
+        uri = "/aweme/v1/web/aweme/post/"
+        params = {
+            "sec_user_id": sec_user_id,
+            "count": 18,
+            "max_cursor": max_cursor,
+            "locate_query": "false",
+            "publish_video_strategy_type": 2
+        }
+        return await self.get(uri, params)
+
+    async def get_all_user_aweme_posts(self, sec_user_id: str, callback: Optional[Callable] = None):
+        posts_has_more = 1
+        max_cursor = ""
+        result = []
+        while posts_has_more == 1:
+            aweme_post_res = await self.get_user_aweme_posts(sec_user_id, max_cursor)
+            posts_has_more = aweme_post_res.get("has_more", 0)
+            max_cursor = aweme_post_res.get("max_cursor")
+            aweme_list = aweme_post_res.get("aweme_list") if aweme_post_res.get("aweme_list") else []
+            utils.logger.info(
+                f"[DOUYINClient.get_all_user_aweme_posts] got sec_user_id:{sec_user_id} video len : {len(aweme_list)}")
+            if callback:
+                await callback(aweme_list)
+            result.extend(aweme_list)
         return result

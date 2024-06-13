@@ -3,12 +3,10 @@ import functools
 import sys
 from typing import Optional
 
-import redis
 from playwright.async_api import BrowserContext, Page
 from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,
                       wait_fixed)
 
-import config
 from base.base_crawler import AbstractLogin
 from tools import utils
 
@@ -21,7 +19,7 @@ class KuaishouLogin(AbstractLogin):
                  login_phone: Optional[str] = "",
                  cookie_str: str = ""
                  ):
-        self.login_type = login_type
+        config.LOGIN_TYPE = login_type
         self.browser_context = browser_context
         self.context_page = context_page
         self.login_phone = login_phone
@@ -30,16 +28,16 @@ class KuaishouLogin(AbstractLogin):
     async def begin(self):
         """Start login xiaohongshu"""
         utils.logger.info("[KuaishouLogin.begin] Begin login kuaishou ...")
-        if self.login_type == "qrcode":
+        if config.LOGIN_TYPE == "qrcode":
             await self.login_by_qrcode()
-        elif self.login_type == "phone":
+        elif config.LOGIN_TYPE == "phone":
             await self.login_by_mobile()
-        elif self.login_type == "cookie":
+        elif config.LOGIN_TYPE == "cookie":
             await self.login_by_cookies()
         else:
             raise ValueError("[KuaishouLogin.begin] Invalid Login Type Currently only supported qrcode or phone or cookie ...")
 
-    @retry(stop=stop_after_attempt(20), wait=wait_fixed(1), retry=retry_if_result(lambda value: value is False))
+    @retry(stop=stop_after_attempt(600), wait=wait_fixed(1), retry=retry_if_result(lambda value: value is False))
     async def check_login_state(self) -> bool:
         """
             Check if the current login status is successful and return True otherwise return False
