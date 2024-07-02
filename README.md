@@ -15,9 +15,6 @@
 
 
 ## 功能列表
-> 下面不支持的项目，相关的代码架构已经搭建好，只需要实现对应的方法即可，欢迎大家提交PR
-
-
 | 平台  | 关键词搜索 | 指定帖子ID爬取 | 二级评论 | 指定创作者主页 | 登录态缓存 | IP代理池 | 生成评论词云图 |
 |-----|-------|----------|-----|--------|-------|-------|-------|
 | 小红书 | ✅     | ✅        | ✅   | ✅      | ✅     | ✅     | ✅    |
@@ -35,7 +32,7 @@
    cd MediaCrawler
    
    # 创建虚拟环境
-   # 注意python 版本需要3.7 - 3.9 
+   # 注意python 版本需要3.7 - 3.9 高于该版本可能会出现一些依赖包兼容问题
    python -m venv venv
    
    # macos & linux 激活虚拟环境
@@ -49,7 +46,7 @@
 ### 安装依赖库
 
    ```shell
-   pip3 install -r requirements.txt
+   pip install -r requirements.txt
    ```
 
 ### 安装 playwright浏览器驱动
@@ -84,17 +81,16 @@
 
 
 ## 开发者服务
-- 知识星球：沉淀高质量常见问题、最佳实践文档、多年编程+爬虫经验分享，提供付费知识星球服务，主动提问，作者会定期回答问题
+- 知识星球：沉淀高质量常见问题、最佳实践文档、多年编程+爬虫经验分享，提供付费知识星球服务，主动提问，作者会定期回答问题 (每天 1 快钱订阅我的知识服务)
   <p>
   <img alt="xingqiu" src="https://nm.zizhi1.com/static/img/8e1312d1f52f2e0ff436ea7196b4e27b.15555424244122T1.webp" style="width: auto;height: 400px" >
-  <img alt="xingqiu_yhq" src="https://nm.zizhi1.com/static/img/c14da73f0dd9351e7169a36368d5037b.yhq.webp" style="width: auto;height: 400px" >
   </p>
   
   星球精选文章： 
   - [【独创】使用Playwright获取某音a_bogus参数流程（包含加密参数分析）](https://articles.zsxq.com/id_u89al50jk9x0.html)
   - [【独创】使用Playwright低成本获取某书X-s参数流程分析（当年的回忆录）](https://articles.zsxq.com/id_u4lcrvqakuc7.html)
   - [ MediaCrawler-基于抽象类设计重构项目缓存](https://articles.zsxq.com/id_4ju73oxewt9j.html)
-  - [ 手把手带你撸一个自己的IP代理池](https://articles.zsxq.com/id_38fza371ladm.html)
+  - [ 手把手带你撸一个自己的IP代理池](https://articles.zsxq.com/id_38fza371ladm.html) 
   
   
   
@@ -116,13 +112,34 @@
 成为赞助者，展示你的产品在这里，联系作者：relakkes@gmail.com
 
 
-
 ## MediaCrawler爬虫项目交流群：
-> 7天有效期，自动更新, 如果人满了可以加作者wx拉进群: yzglan，备注来自github.
+> 扫描下方我的个人微信，备注：github，拉你进MediaCrawler项目交流群(请一定备注：github，会有wx小助手自动拉群)
+> 
+> 如果图片展示不出来，可以直接添加我的微信号：yzglan
 
 <div style="max-width: 200px">  
-<p><img alt="11群二维码" src="static/images/11群二维码.JPG" style="width: 200px;height: 100%" ></p>
+<p><img alt="relakkes_wechat" src="static/images/relakkes_weichat.JPG" style="width: 200px;height: 100%" ></p>
 </div>
+
+
+## 运行报错常见问题Q&A
+> 遇到问题先自行搜索解决下，现在AI很火，用ChatGPT大多情况下能解决你的问题 [免费的ChatGPT](https://sider.ai/ad-land-redirect?source=github&p1=mi&p2=kk)  
+
+➡️➡️➡️ [常见问题](docs/常见问题.md)
+
+dy和xhs使用Playwright登录现在会出现滑块验证 + 短信验证，手动过一下
+
+## 项目代码结构
+➡️➡️➡️ [项目代码结构说明](docs/项目代码结构.md)
+
+## 代理IP使用说明
+➡️➡️➡️ [代理IP使用说明](docs/代理使用.md)
+
+## 词云图相关操作说明
+➡️➡️➡️ [词云图相关说明](docs/关于词云图相关操作.md)
+
+## 手机号登录说明
+➡️➡️➡️ [手机号登录说明](docs/手机号登录说明.md)
 
 
 ## 打赏
@@ -136,21 +153,8 @@
 我新开的爬虫教程Github仓库 [CrawlerTutorial](https://github.com/NanmiCoder/CrawlerTutorial) ，感兴趣的朋友可以关注一下，持续更新，主打一个免费.
 
 
-## 运行报错常见问题Q&A
-> 遇到问题先自行搜索解决下，现在AI很火，用ChatGPT大多情况下能解决你的问题 [免费的ChatGPT](https://sider.ai/ad-land-redirect?source=github&p1=mi&p2=kk)  
-
-➡️➡️➡️ [常见问题](docs/常见问题.md)
-
-抖音使用Playwright登录现在会出现滑块验证 + 短信验证，手动过一下
-
-
-## 项目代码结构
-➡️➡️➡️ [项目代码结构说明](docs/项目代码结构.md)
-
-## 手机号登录说明
-➡️➡️➡️ [手机号登录说明](docs/手机号登录说明.md)
-
 ## 项目贡献者
+> 感谢你们的贡献，让项目变得更好！（贡献比较多的可以加我wx，免费拉你进我的知识星球，后期还有一些其他福利。）
 <!-- readme: contributors -start -->
 <table>
 	<tbody>
@@ -167,6 +171,13 @@
                     <img src="https://avatars.githubusercontent.com/u/117699758?v=4" width="100;" alt="leantli"/>
                     <br />
                     <sub><b>leantli</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Rosyrain">
+                    <img src="https://avatars.githubusercontent.com/u/116946548?v=4" width="100;" alt="Rosyrain"/>
+                    <br />
+                    <sub><b>Rosyrain</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -190,6 +201,8 @@
                     <sub><b>HIRO</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/PeanutSplash">
                     <img src="https://avatars.githubusercontent.com/u/98582625?v=4" width="100;" alt="PeanutSplash"/>
@@ -197,20 +210,11 @@
                     <sub><b>PeanutSplash</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/Ermeng98">
                     <img src="https://avatars.githubusercontent.com/u/55784769?v=4" width="100;" alt="Ermeng98"/>
                     <br />
                     <sub><b>Ermeng</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/Rosyrain">
-                    <img src="https://avatars.githubusercontent.com/u/116946548?v=4" width="100;" alt="Rosyrain"/>
-                    <br />
-                    <sub><b>Rosyrain</b></sub>
                 </a>
             </td>
             <td align="center">
